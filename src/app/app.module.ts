@@ -18,7 +18,7 @@ import {CalculoCustoComponent} from "./calculo-custo/calculo-custo.component";
     ProfileComponent,
     SignInComponent,
     SignUpComponent,
-    CalculoCustoComponent
+    CalculoCustoComponent,
   ],
   imports: [
     BrowserModule,
