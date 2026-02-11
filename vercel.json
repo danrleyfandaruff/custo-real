@@ -1,4 +1,5 @@
 {
+  "outputDirectory": "dist/angular-supabase",
   "rewrites": [
     {
       "source": "/(.*)",
