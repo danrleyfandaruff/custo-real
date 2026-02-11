@@ -28,7 +28,7 @@ export class SignInComponent {
       .then(() => {
         // ✅ sucesso
         this.loading = false;
-        this.router.navigate(['/profile']);
+        this.router.navigate(['/calculo-custo']);
       })
       .catch((error) => {
         // ❌ erro

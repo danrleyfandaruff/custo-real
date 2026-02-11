@@ -10,6 +10,7 @@ import { SignInComponent } from './sign-in/sign-in.component';
 import { SignUpComponent } from './sign-up/sign-up.component';
 import { IonicModule } from '@ionic/angular';
 import { ServiceWorkerModule } from '@angular/service-worker';
+import {CalculoCustoComponent} from "./calculo-custo/calculo-custo.component";
 
 @NgModule({
   declarations: [
@@ -17,11 +18,13 @@ import { ServiceWorkerModule } from '@angular/service-worker';
     ProfileComponent,
     SignInComponent,
     SignUpComponent,
+    CalculoCustoComponent
   ],
   imports: [
     BrowserModule,
     FormsModule,
     AppRoutingModule,
+    FormsModule,
     IonicModule.forRoot({}),
     ServiceWorkerModule.register('ngsw-worker.js', {
       enabled: !isDevMode(),
