@@ -1,0 +1,39 @@
+.glass-header {
+  --background: transparent;
+
+  ion-toolbar {
+    --background: rgba(255, 255, 255, 0.08);
+    backdrop-filter: blur(18px);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+    --color: #fff;
+    padding: 0 8px;
+  }
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 700;
+  font-size: 16px;
+  color: #fff;
+
+  ion-icon {
+    font-size: 20px;
+    color: #22c55e;
+  }
+}
+
+.nav-btn {
+  font-weight: 500;
+  font-size: 14px;
+  color: #e5e7eb;
+
+  &:hover {
+    color: #22c55e;
+  }
+
+  &.danger:hover {
+    color: #ef4444;
+  }
+}

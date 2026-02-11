@@ -16,32 +16,33 @@ export class ProfileComponent implements OnInit {
     this.user = {} as IUser;
   }
 
-  public ngOnInit(): void {
-    const session = this.supabaseService.getSession();
+  public async ngOnInit(): Promise<void> {
+    // ⬇️ AGORA resolve a Promise
+    const session = await this.supabaseService.getSession();
 
-    if (session && session.user && session.user.email) {
+    if (session?.user?.email) {
       this.user.email = session.user.email;
     }
 
     this.supabaseService.getProfile()
-    .then((success: any) => {
-      if (success && success.profile) {
-        this.user.name = success.profile.username;
-        this.user.website = success.profile.website;
-        this.user.url = success.profile.avatar_url;
-      }
-    });
+      .then((success: any) => {
+        if (success && success.profile) {
+          this.user.name = success.profile.username;
+          this.user.website = success.profile.website;
+          this.user.url = success.profile.avatar_url;
+        }
+      });
   }
 
   public update(): void {
     this.loading = true;
 
     this.supabaseService.updateProfile(this.user)
-    .then(() => {
-      this.loading = false;
-    }).catch(() => {
-      this.loading = false;
-    });
+      .then(() => {
+        this.loading = false;
+      })
+      .catch(() => {
+        this.loading = false;
+      });
   }
-
 }

@@ -1,0 +1,95 @@
+.profile-content {
+  --background: #0b0f1a;
+}
+
+.background-blur {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(circle at 20% 20%, #22c55e, transparent 40%),
+    radial-gradient(circle at 80% 30%, #6366f1, transparent 40%),
+    radial-gradient(circle at 50% 80%, #06b6d4, transparent 40%);
+  filter: blur(90px);
+  opacity: 0.55;
+}
+
+.profile-wrapper {
+  min-height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  position: relative;
+  z-index: 2;
+}
+
+.profile-card {
+  width: 100%;
+  max-width: 420px;
+  border-radius: 28px;
+  background: rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(20px);
+  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.4);
+}
+
+.avatar-wrapper {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 16px;
+
+  img {
+    width: 96px;
+    height: 96px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 3px solid rgba(255, 255, 255, 0.25);
+  }
+}
+
+.title {
+  text-align: center;
+  font-size: 22px;
+  font-weight: 700;
+  color: #fff;
+  margin-bottom: 4px;
+}
+
+.subtitle {
+  text-align: center;
+  font-size: 14px;
+  color: #9ca3af;
+  margin-bottom: 24px;
+}
+
+.modern-input {
+  margin-bottom: 16px;
+  border-radius: 14px;
+  --background: rgba(255, 255, 255, 0.12);
+  --color: #fff;
+
+  ion-icon {
+    color: #9ca3af;
+  }
+
+  ion-input {
+    --placeholder-color: #9ca3af;
+    --placeholder-opacity: 1;
+  }
+
+  &.readonly {
+    opacity: 0.7;
+  }
+}
+
+.update-btn {
+  margin-top: 18px;
+  height: 50px;
+  font-weight: 600;
+  font-size: 16px;
+  border-radius: 14px;
+  --background: linear-gradient(135deg, #22c55e, #16a34a);
+}
+
+.spinner {
+  margin-right: 8px;
+}

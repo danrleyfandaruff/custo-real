@@ -1,25 +1,43 @@
-<nav class="navbar navbar-expand-sm navbar-light bg-light">
-  <div class="container-fluid">
-    <a class="navbar-brand" href="#">Angular Supabase</a>
+<ion-header class="glass-header">
+  <ion-toolbar>
 
-    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-      <span class="navbar-toggler-icon"></span>
-    </button>
+    <!-- Logo / Brand -->
+    <ion-title class="brand">
+      <ion-icon name="layers-outline"></ion-icon>
+      Angular Supabase
+    </ion-title>
 
-    <div id="navbarContent" class="collapse navbar-collapse">
-      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-        <li class="nav-item">
-          <a class="nav-link" routerLink="/signIn" routerLinkActive="active" *ngIf="!isAuthenticated()">Sign in</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" routerLink="/profile" routerLinkActive="active" *ngIf="isAuthenticated()">Profile</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" routerLink="" (click)="signOut()" *ngIf="isAuthenticated()">Sign out</a>
-        </li>
-      </ul>
-    </div>
-  </div>
-</nav>
+    <!-- Ações -->
+    <ion-buttons slot="end">
+
+      <ion-button
+        *ngIf="!isAuthenticated()"
+        routerLink="/sign-in"
+        fill="clear"
+        class="nav-btn">
+        Entrar
+      </ion-button>
+
+      <ion-button
+        *ngIf="isAuthenticated()"
+        routerLink="/profile"
+        fill="clear"
+        class="nav-btn">
+        Perfil
+      </ion-button>
+
+      <ion-button
+        *ngIf="isAuthenticated()"
+        fill="clear"
+        class="nav-btn danger"
+        (click)="signOut()">
+        Sair
+      </ion-button>
+
+    </ion-buttons>
+
+  </ion-toolbar>
+</ion-header>
+
 
 <router-outlet></router-outlet>

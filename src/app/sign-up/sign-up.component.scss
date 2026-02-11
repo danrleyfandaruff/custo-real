@@ -1,4 +1,4 @@
-.login-content {
+.signup-content {
   --background: #0b0f1a;
 }
 
@@ -6,14 +6,14 @@
   position: absolute;
   inset: 0;
   background:
-    radial-gradient(circle at 20% 20%, #4f46e5, transparent 40%),
-    radial-gradient(circle at 80% 30%, #06b6d4, transparent 40%),
-    radial-gradient(circle at 50% 80%, #22c55e, transparent 40%);
+    radial-gradient(circle at 15% 25%, #22c55e, transparent 40%),
+    radial-gradient(circle at 80% 20%, #6366f1, transparent 40%),
+    radial-gradient(circle at 50% 80%, #06b6d4, transparent 40%);
   filter: blur(90px);
-  opacity: 0.6;
+  opacity: 0.55;
 }
 
-.login-wrapper {
+.signup-wrapper {
   height: 100%;
   display: flex;
   align-items: center;
@@ -23,9 +23,9 @@
   z-index: 2;
 }
 
-.login-card {
+.signup-card {
   width: 100%;
-  max-width: 380px;
+  max-width: 400px;
   border-radius: 28px;
   background: rgba(255, 255, 255, 0.08);
   backdrop-filter: blur(20px);
@@ -71,7 +71,7 @@
   }
 }
 
-.login-btn {
+.signup-btn {
   margin-top: 22px;
   height: 50px;
   font-weight: 600;
@@ -110,7 +110,7 @@
   }
 }
 
-.signup {
+.signin {
   text-align: center;
   font-size: 14px;
   color: #9ca3af;

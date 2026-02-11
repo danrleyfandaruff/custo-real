@@ -1,18 +1,28 @@
-<ion-content class="login-content">
+<ion-content class="signup-content">
 
   <div class="background-blur"></div>
 
-  <div class="login-wrapper">
+  <div class="signup-wrapper">
 
-    <ion-card class="login-card">
+    <ion-card class="signup-card">
       <ion-card-content>
 
-        <!-- Logo / Marca -->
+        <!-- Brand -->
         <div class="brand">
-          <ion-icon name="shield-checkmark-outline"></ion-icon>
-          <h1>Supabase App</h1>
-          <p>Faça login para continuar</p>
+          <ion-icon name="person-add-outline"></ion-icon>
+          <h1>Criar conta</h1>
+          <p>Leva menos de 1 minuto</p>
         </div>
+
+        <!-- Nome -->
+        <ion-item lines="none" class="modern-input">
+          <ion-icon name="person-outline" slot="start"></ion-icon>
+          <ion-input
+            type="text"
+            placeholder="Nome completo"
+            [(ngModel)]="user.name">
+          </ion-input>
+        </ion-item>
 
         <!-- Email -->
         <ion-item lines="none" class="modern-input">
@@ -37,8 +47,8 @@
         <!-- Botão -->
         <ion-button
           expand="block"
-          class="login-btn"
-          (click)="signIn()"
+          class="signup-btn"
+          (click)="signUp()"
           [disabled]="loading">
 
           <ion-spinner
@@ -47,7 +57,7 @@
             class="spinner">
           </ion-spinner>
 
-          <span *ngIf="!loading">Entrar</span>
+          <span *ngIf="!loading">Criar conta</span>
         </ion-button>
 
         <!-- Divider -->
@@ -55,11 +65,11 @@
           <span>ou</span>
         </div>
 
-        <!-- Cadastro -->
-        <div class="signup">
-          <span>Não tem conta?</span>
-          <ion-router-link routerLink="/signUp">
-            Criar conta
+        <!-- Login -->
+        <div class="signin">
+          <span>Já tem conta?</span>
+          <ion-router-link routerLink="/sign-in">
+            Entrar
           </ion-router-link>
         </div>
 
