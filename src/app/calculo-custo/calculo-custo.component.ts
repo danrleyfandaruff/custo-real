@@ -1,7 +1,7 @@
-import { Component, OnInit } from '@angular/core';
-import { FormsModule } from '@angular/forms';
-import { IonicModule } from '@ionic/angular';
-import { addIcons } from 'ionicons';
+import {Component, ElementRef, OnInit, ViewChild} from '@angular/core';
+import {FormsModule} from '@angular/forms';
+import {IonicModule} from '@ionic/angular';
+import {addIcons} from 'ionicons';
 import {
   calculatorOutline,
   addOutline,
@@ -68,6 +68,7 @@ export class CalculoCustoComponent implements OnInit {
   private readonly FIX_ICMS_REAL_D = 10;
   private readonly FIX_DIAS_FORMACAO = 15;
   private readonly FIX_FRETE_VP_DIAS = 15;
+  @ViewChild('resultadosWrapper') resultadosWrapper!: ElementRef;
 
   taxaFin: number = 1.8;
   fornecedores: Fornecedor[] = [];
@@ -165,7 +166,7 @@ export class CalculoCustoComponent implements OnInit {
 
   atualizarFornecedor(id: string, campo: keyof Fornecedor, valor: any) {
     this.fornecedores = this.fornecedores.map(f =>
-      f.id === id ? { ...f, [campo]: valor } : f
+      f.id === id ? {...f, [campo]: valor} : f
     );
     this.salvarDados();
   }
@@ -179,8 +180,26 @@ export class CalculoCustoComponent implements OnInit {
   async calcular() {
     this.animacaoCalculando = true;
 
+    // Simular tempo de cálculo
+    setTimeout(() => {
+      // Atualiza os resultados chamando a função de cálculo real
+      this.calcularResultados();
+
+      // Scroll suave para os resultados
+      setTimeout(() => {
+        this.resultadosWrapper?.nativeElement.scrollIntoView({
+          behavior: 'smooth',
+          block: 'start'
+        });
+      }, 50);
+
+      this.animacaoCalculando = false;
+    }, 600); // tempo simulado de cálculo
+  }
+
+
+  calcularResultados() {
     // Pequeno delay para feedback visual
-    await new Promise(resolve => setTimeout(resolve, 300));
 
     const taxaMensal = this.taxaFin / 100;
     const inflacao = this.FIX_INFLACAO_PCT / 100;
@@ -207,7 +226,7 @@ export class CalculoCustoComponent implements OnInit {
 
         const Final = this.truncar(A + D + E - B - C);
 
-        return { ...f, A, B, C, D, E, Final } as Resultado;
+        return {...f, A, B, C, D, E, Final} as Resultado;
       })
       .sort((a, b) => a.Final - b.Final);
 
@@ -230,8 +249,8 @@ export class CalculoCustoComponent implements OnInit {
   }
 
   formatarBRLCompacto(valor: number): string {
-    if (valor >= 1000000) return `R$ ${(valor/1000000).toFixed(2)}M`;
-    if (valor >= 1000) return `R$ ${(valor/1000).toFixed(2)}K`;
+    if (valor >= 1000000) return `R$ ${(valor / 1000000).toFixed(2)}M`;
+    if (valor >= 1000) return `R$ ${(valor / 1000).toFixed(2)}K`;
     return this.formatarBRL(valor);
   }
 
@@ -256,11 +275,11 @@ export class CalculoCustoComponent implements OnInit {
     ]);
 
     const csv = [cabecalho, ...linhas].map(row => row.join(';')).join('\n');
-    const blob = new Blob(['\ufeff' + csv], { type: 'text/csv;charset=utf-8;' });
+    const blob = new Blob(['\ufeff' + csv], {type: 'text/csv;charset=utf-8;'});
     const url = URL.createObjectURL(blob);
     const link = document.createElement('a');
     link.href = url;
-    link.download = `custo-real-${new Date().toISOString().slice(0,10)}.csv`;
+    link.download = `custo-real-${new Date().toISOString().slice(0, 10)}.csv`;
     link.click();
     URL.revokeObjectURL(url);
   }
@@ -270,6 +289,7 @@ export class CalculoCustoComponent implements OnInit {
     localStorage.removeItem('custo-real-v4');
     window.location.reload();
   }
+
   // Adicione este método na classe CalculoCustoComponent
   calcularVP(valor: number, prazo: number): number {
     const taxaMensal = this.taxaFin / 100;

@@ -1,403 +1,149 @@
-<!-- calculo-custo.component.html -->
-<ion-header class="ion-no-border">
-  <ion-toolbar color="dark" class="glass-toolbar">
-    <ion-title>
-      <div class="logo-container">
-        <ion-icon name="calculator-outline" class="logo-icon"></ion-icon>
-        <span>Custo Real</span>
-        <span class="badge-beta">v4</span>
+<ion-content [fullscreen]="true">
+  <div class="dark-gradient-bg"></div>
+
+  <div class="main-shell">
+    <header class="app-header">
+      <div class="header-content">
+        <h1>Análise de Custos <span class="brand-text">Otimiza</span> <ion-icon name="flash"></ion-icon></h1>
+        <p>Compare fornecedores e identifique a melhor proposta real.</p>
       </div>
-    </ion-title>
-    <ion-buttons slot="end">
-      <ion-button (click)="exportarCSV()" [disabled]="!temResultados" class="btn-header">
-        <ion-icon name="download-outline" slot="icon-only"></ion-icon>
-      </ion-button>
-      <ion-button (click)="resetar()" class="btn-header">
-        <ion-icon name="refresh-outline" slot="icon-only"></ion-icon>
-      </ion-button>
-    </ion-buttons>
-  </ion-toolbar>
-</ion-header>
+      <button class="btn-reset-top" (click)="resetar()">
+        <ion-icon name="refresh-outline"></ion-icon>
+      </button>
+    </header>
 
-<ion-content class="ion-padding content-gradient" >
-  <!-- Background decorativo -->
-  <div class="bg-pattern"></div>
-
-  <!-- Configuração Global -->
-  <div class="section-title">
-    <ion-icon name="settings-outline" class="title-icon"></ion-icon>
-    <h2>Configuração Financeira</h2>
-  </div>
-
-  <ion-card class="glass-card floating">
-    <ion-card-content>
-      <div class="taxa-container">
-        <div class="taxa-icon">
-          <ion-icon name="trending-up-outline"></ion-icon>
-        </div>
-        <div class="taxa-content">
-          <div class="taxa-label">
-            <span class="label-main">Taxa Financeira Mensal</span>
-            <span class="label-sub">Usada no cálculo de valor presente</span>
+    <section class="global-config">
+      <div class="neon-card taxa-card">
+        <div class="card-inner">
+          <div class="info">
+            <div class="icon-glow">
+              <ion-icon name="trending-up-outline"></ion-icon>
+            </div>
+            <div>
+              <h3>Taxa de Financiamento</h3>
+              <p>Custo de capital para Valor Presente</p>
+            </div>
           </div>
-          <div class="taxa-input-wrapper">
-            <ion-input
-              type="number"
-              step="0.0001"
-              [(ngModel)]="taxaFin"
-              class="taxa-input"
-              placeholder="0.0000">
-            </ion-input>
-            <span class="taxa-suffix">% a.m.</span>
+          <div class="input-glow-group">
+            <input type="number" [(ngModel)]="taxaFin" step="0.1">
+            <span class="unit">% am</span>
           </div>
         </div>
       </div>
+    </section>
 
-      <ion-button
-        expand="block"
-        color="primary"
-        fill="solid"
-        (click)="calcular()"
-        class="btn-calcular"
-        [disabled]="animacaoCalculando">
-        <ion-icon name="calculator-outline" slot="start"></ion-icon>
-        {{ animacaoCalculando ? 'Calculando...' : 'Calcular Comparativo' }}
-        <div class="btn-shine"></div>
-      </ion-button>
-    </ion-card-content>
-  </ion-card>
+    <section class="vendors-section">
+      <div class="section-label">
+        <ion-icon name="business-outline"></ion-icon>
+        <span>Fornecedores</span>
+      </div>
 
-  <!-- Fornecedores -->
-  <div class="section-title">
-    <ion-icon name="business-outline" class="title-icon"></ion-icon>
-    <h2>Fornecedores</h2>
-    <span class="section-badge">{{ fornecedores.length }}</span>
-  </div>
-
-  <ion-grid class="fornecedores-grid">
-    <ion-row>
-      <ion-col size="12" size-md="6" size-xl="4" *ngFor="let f of fornecedores; let i = index">
-        <ion-card class="fornecedor-card glass-card hover-lift">
+      <div class="vendors-grid">
+        <div class="vendor-card-premium" *ngFor="let f of fornecedores; let i = index">
           <div class="card-header">
-            <div class="card-header-content">
-              <ion-icon name="business-outline" class="company-icon"></ion-icon>
-              <div class="card-title-group">
-                <ion-input
-                  placeholder="Nome do fornecedor"
-                  [(ngModel)]="f.nome"
-                  (ngModelChange)="atualizarFornecedor(f.id, 'nome', f.nome)"
-                  class="nome-input"
-                  maxlength="30">
-                </ion-input>
-                <span class="card-subtitle">Fornecedor {{ i + 1 }}</span>
-              </div>
-            </div>
-            <div class="card-actions">
-              <ion-button fill="clear" size="small" (click)="duplicarFornecedor(f)" class="btn-action">
-                <ion-icon name="duplicate-outline" slot="icon-only"></ion-icon>
-              </ion-button>
-              <ion-button fill="clear" size="small" color="danger" (click)="removerFornecedor(f.id)" class="btn-action">
-                <ion-icon name="trash-outline" slot="icon-only"></ion-icon>
-              </ion-button>
+            <span class="index">#0{{ i + 1 }}</span>
+            <input class="name-edit" [(ngModel)]="f.nome">
+            <div class="actions">
+              <button class="mini-btn-copy" (click)="duplicarFornecedor(f)"><ion-icon name="duplicate-outline"></ion-icon></button>
+              <button class="mini-btn-del" (click)="removerFornecedor(f.id)"><ion-icon name="trash-outline"></ion-icon></button>
             </div>
           </div>
 
-          <ion-card-content>
-            <div class="form-grid">
-              <div class="form-row">
-                <div class="form-group full">
-                  <span class="form-label">Valor do produto</span>
-                  <div class="input-group">
-                    <span class="input-prefix">R$</span>
-                    <ion-input
-                      type="number"
-                      step="0.0001"
-                      [(ngModel)]="f.valor"
-                      placeholder="0,0000"
-                      class="input-modern">
-                    </ion-input>
-                  </div>
-                </div>
-              </div>
-
-              <div class="form-row grid-4">
-                <div class="form-group">
-                  <span class="form-label">Prazo</span>
-                  <div class="input-group">
-                    <ion-input
-                      type="number"
-                      [(ngModel)]="f.prazo"
-                      (ionBlur)="atualizarFornecedor(f.id, 'prazo', f.prazo)"
-                      placeholder="0"
-                      class="input-modern">
-                    </ion-input>
-                    <span class="input-suffix">dias</span>
-                  </div>
-                </div>
-                <div class="form-group">
-                  <span class="form-label">IPI</span>
-                  <div class="input-group">
-                    <ion-input
-                      type="number"
-                      step="0.01"
-                      [(ngModel)]="f.ipi"
-                      (ionBlur)="atualizarFornecedor(f.id, 'ipi', f.ipi)"
-                      placeholder="0,00"
-                      class="input-modern">
-                    </ion-input>
-                    <span class="input-suffix">%</span>
-                  </div>
-                </div>
-                <div class="form-group">
-                  <span class="form-label">Frete</span>
-                  <div class="input-group">
-                    <ion-input
-                      type="number"
-                      step="0.01"
-                      [(ngModel)]="f.frete"
-                      (ionBlur)="atualizarFornecedor(f.id, 'frete', f.frete)"
-                      placeholder="0,00"
-                      class="input-modern">
-                    </ion-input>
-                    <span class="input-suffix">%</span>
-                  </div>
-                </div>
-              </div>
-
-              <div class="form-row grid-2">
-                <div class="form-group">
-                  <span class="form-label">PIS</span>
-                  <div class="input-group">
-                    <ion-input
-                      type="number"
-                      step="0.01"
-                      [(ngModel)]="f.pis"
-                      (ionBlur)="atualizarFornecedor(f.id, 'pis', f.pis)"
-                      placeholder="1,65"
-                      class="input-modern">
-                    </ion-input>
-                    <span class="input-suffix">%</span>
-                  </div>
-                </div>
-                <div class="form-group">
-                  <span class="form-label">COFINS</span>
-                  <div class="input-group">
-                    <ion-input
-                      type="number"
-                      step="0.01"
-                      [(ngModel)]="f.cofins"
-                      (ionBlur)="atualizarFornecedor(f.id, 'cofins', f.cofins)"
-                      placeholder="7,60"
-                      class="input-modern">
-                    </ion-input>
-                    <span class="input-suffix">%</span>
-                  </div>
-                </div>
+          <div class="card-body">
+            <div class="modern-input">
+              <label>Valor do Produto</label>
+              <div class="field">
+                <span class="symbol">R$</span>
+                <input type="number" [(ngModel)]="f.valor">
               </div>
             </div>
-          </ion-card-content>
 
-          <div class="card-footer" *ngIf="f.valor > 0 && resultados.length > 0">
-            <div class="footer-stats">
-              <!-- Substituir esta linha: -->
-              <span>VP: {{ formatarBRLCompacto(calcularVP(f.valor, f.prazo)) }}</span>
-            </div>
-          </div>
-        </ion-card>
-      </ion-col>
-
-      <ion-col size="12" size-md="6" size-xl="4">
-        <ion-card class="add-card glass-card" button (click)="adicionarFornecedor()">
-          <ion-card-content class="ion-text-center">
-            <div class="add-content">
-              <div class="add-icon-container">
-                <ion-icon name="add-outline" class="add-icon"></ion-icon>
+            <div class="modern-input">
+              <label>Prazo de Pagamento</label>
+              <div class="field">
+                <input type="number" [(ngModel)]="f.prazo">
+                <span class="symbol">DIAS</span>
               </div>
-              <h3>Adicionar Fornecedor</h3>
-              <p>Clique para incluir mais uma opção</p>
             </div>
-          </ion-card-content>
-        </ion-card>
-      </ion-col>
-    </ion-row>
-  </ion-grid>
 
-  <!-- Resultados -->
-  <ng-container *ngIf="temResultados">
-    <div class="section-title">
-      <ion-icon name="trophy-outline" class="title-icon"></ion-icon>
-      <h2>Resultados da Análise</h2>
-    </div>
-
-    <!-- Vencedor -->
-    <div class="vencedor-wrapper">
-      <div class="vencedor-card premium-card">
-        <div class="vencedor-badge">
-          <span class="badge-text">Melhor custo real</span>
-        </div>
-
-        <div class="vencedor-content">
-          <div class="vencedor-icon">
-            <ion-icon name="checkmark-circle" class="winner-icon"></ion-icon>
-          </div>
-
-          <div class="vencedor-info">
-            <h4 class="vencedor-label">Fornecedor vencedor</h4>
-            <h2 class="vencedor-nome">{{ vencedor?.nome }}</h2>
-
-            <div class="vencedor-stats">
-              <div class="stat-item">
-                <span class="stat-label">Custo real final</span>
-                <span class="stat-value">{{ formatarBRL(vencedor?.Final || 0) }}</span>
+            <div class="mini-stats-grid">
+              <div class="mini-input">
+                <label>IPI %</label>
+                <input type="number" [(ngModel)]="f.ipi">
               </div>
-
-              <div class="stat-divider"></div>
-
-              <div class="stat-item" *ngIf="economiaTotal > 0">
-                <span class="stat-label">Economia vs 2º lugar</span>
-                <span class="stat-value economia">{{ formatarBRL(economiaTotal) }}</span>
-                <span class="stat-badge">-{{ percentualEconomia }}%</span>
+              <div class="mini-input">
+                <label>Frete %</label>
+                <input type="number" [(ngModel)]="f.frete">
               </div>
             </div>
           </div>
         </div>
 
-        <div class="vencedor-detalhes" *ngIf="vencedor">
-          <div class="detalhe-chip">
-            <ion-icon name="time-outline"></ion-icon>
-            <span>Prazo: {{ vencedor.prazo }} dias</span>
-          </div>
-          <div class="detalhe-chip">
-            <ion-icon name="cash-outline"></ion-icon>
-            <span>Valor: {{ formatarBRLCompacto(vencedor.valor) }}</span>
-          </div>
-        </div>
+        <button class="add-card-dashed" (click)="adicionarFornecedor()">
+          <div class="circle-icon"><ion-icon name="add-outline"></ion-icon></div>
+          <p>Adicionar Proposta</p>
+        </button>
       </div>
-    </div>
+    </section>
 
-    <!-- Ranking -->
-    <ion-card class="glass-card ranking-card">
-      <div class="ranking-header">
-        <div class="ranking-title">
+    <section #resultadosWrapper class="result-display">
+      <div class="winner-glow-card" *ngIf="vencedor; else semDados">
+        <div class="winner-badge">
+          <ion-icon name="trophy"></ion-icon> Melhor Custo Real
+        </div>
+
+        <div class="winner-info">
+          <h2 class="winner-name">{{ vencedor.nome }}</h2>
+          <div class="main-price">{{ formatarBRL(vencedor.Final) }}</div>
+          <p class="price-label">Valor Final Ajustado</p>
+        </div>
+
+        <div class="economy-strip" *ngIf="economiaTotal > 0">
+          <div class="strip-content">
+            <ion-icon name="checkmark-circle"></ion-icon>
+            <span>Economia real de <strong>{{ formatarBRL(economiaTotal) }}</strong></span>
+          </div>
+          <div class="pct-badge">{{ percentualEconomia }}%</div>
+        </div>
+
+        <div class="stats-table">
+          <div class="stat-col">
+            <span>VP Bruto</span>
+            <strong>{{ formatarBRLCompacto(vencedor.A) }}</strong>
+          </div>
+          <div class="stat-col">
+            <span>Impostos</span>
+            <strong class="minus">-{{ formatarBRLCompacto(vencedor.B + vencedor.C) }}</strong>
+          </div>
+          <div class="stat-col">
+            <span>Frete</span>
+            <strong>{{ formatarBRLCompacto(vencedor.E) }}</strong>
+          </div>
+        </div>
+
+        <button class="btn-export" (click)="exportarCSV()">
+          <ion-icon name="download-outline"></ion-icon> Exportar Dados
+        </button>
+      </div>
+
+      <ng-template #semDados>
+        <div class="empty-glow-card">
           <ion-icon name="bar-chart-outline"></ion-icon>
-          <h3>Ranking de Fornecedores</h3>
+          <h3>Aguardando Propostas</h3>
+          <p>Insira os dados dos fornecedores para gerar o comparativo.</p>
         </div>
-        <ion-button fill="clear" size="small" (click)="exportarCSV()" class="btn-export">
-          <ion-icon name="download-outline" slot="start"></ion-icon>
-          Exportar CSV
-        </ion-button>
+      </ng-template>
+    </section>
+  </div>
+
+  <div class="footer-action">
+    <button class="main-action-btn" (click)="calcular()" [disabled]="animacaoCalculando">
+      <div class="btn-content" *ngIf="!animacaoCalculando">
+        <ion-icon name="flash"></ion-icon>
+        <span>CALCULAR COMPARATIVO</span>
       </div>
-
-      <div class="ranking-table">
-        <div class="table-header">
-          <div class="col-rank">Posição</div>
-          <div class="col-name">Fornecedor</div>
-          <div class="col-value">Valor do produto</div>
-          <div class="col-final">Custo real final</div>
-          <div class="col-diff">Diferença</div>
-        </div>
-
-        <div class="table-body">
-          <div *ngFor="let r of resultados; let i = index"
-               class="table-row"
-               [ngClass]="{'winner': i === 0, 'second': i === 1, 'third': i === 2}">
-
-            <div class="col-rank">
-              <div class="position-badge" [ngClass]="{'gold': i === 0, 'silver': i === 1, 'bronze': i === 2}">
-                {{ i + 1 }}º
-              </div>
-            </div>
-
-            <div class="col-name">
-              <span class="fornecedor-nome">{{ r.nome }}</span>
-            </div>
-
-            <div class="col-value">
-              <span class="valor-label">{{ formatarBRLCompacto(r.valor) }}</span>
-              <span class="prazo-badge">{{ r.prazo }}d</span>
-            </div>
-
-            <div class="col-final">
-              <span class="final-valor">{{ formatarBRL(r.Final) }}</span>
-            </div>
-
-            <div class="col-diff">
-              <div *ngIf="i === 0" class="diff-best">
-                <ion-icon name="checkmark-circle"></ion-icon>
-                Melhor
-              </div>
-              <div *ngIf="i > 0" class="diff-value">
-                +{{ formatarBRL(r.Final - resultados[0].Final) }}
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Card mobile -->
-      <div class="ranking-mobile">
-        <div *ngFor="let r of resultados; let i = index"
-             class="mobile-item"
-             [ngClass]="{'winner': i === 0}">
-
-          <div class="mobile-item-header">
-            <div class="position-circle" [ngClass]="{'gold': i === 0, 'silver': i === 1, 'bronze': i === 2}">
-              {{ i + 1 }}
-            </div>
-            <span class="mobile-fornecedor">{{ r.nome }}</span>
-            <span class="mobile-badge" *ngIf="i === 0">Vencedor</span>
-          </div>
-
-          <div class="mobile-item-content">
-            <div class="mobile-info">
-              <span class="mobile-label">Custo real</span>
-              <span class="mobile-valor">{{ formatarBRL(r.Final) }}</span>
-            </div>
-            <div class="mobile-info" *ngIf="i > 0">
-              <span class="mobile-label">Diferença</span>
-              <span class="mobile-diff">+{{ formatarBRL(r.Final - resultados[0].Final) }}</span>
-            </div>
-          </div>
-        </div>
-      </div>
-    </ion-card>
-
-    <div class="footer-note">
-      <ion-icon name="information-circle-outline"></ion-icon>
-      <span>Cálculo baseado em Valor Presente • Inflação 0% • ICMS real 10 dias • Formação 15 dias</span>
-    </div>
-  </ng-container>
-
-  <!-- Empty state -->
-  <ng-container *ngIf="!temResultados && fornecedores.length > 0">
-    <div class="empty-state">
-      <div class="empty-icon-container">
-        <ion-icon name="calculator-outline" class="empty-icon"></ion-icon>
-      </div>
-      <h3>Nenhum resultado ainda</h3>
-      <p>Preencha os valores dos fornecedores e clique em calcular</p>
-      <ion-button color="primary" (click)="calcular()" class="btn-calcular-empty">
-        <ion-icon name="calculator-outline" slot="start"></ion-icon>
-        Calcular agora
-      </ion-button>
-    </div>
-  </ng-container>
-
-  <ng-container *ngIf="fornecedores.length === 0">
-    <div class="empty-state">
-      <div class="empty-icon-container">
-        <ion-icon name="business-outline" class="empty-icon"></ion-icon>
-      </div>
-      <h3>Comece adicionando um fornecedor</h3>
-      <p>Clique no card acima para iniciar sua análise</p>
-    </div>
-  </ng-container>
-
-  <!-- FAB mobile -->
-  <ion-fab vertical="bottom" horizontal="end" slot="fixed">
-    <ion-fab-button color="primary" (click)="calcular()" [disabled]="animacaoCalculando" class="fab-primary">
-      <ion-icon name="calculator-outline"></ion-icon>
-    </ion-fab-button>
-  </ion-fab>
-
+      <ion-spinner name="crescent" *ngIf="animacaoCalculando"></ion-spinner>
+      <div class="shimmer"></div>
+    </button>
+  </div>
 </ion-content>

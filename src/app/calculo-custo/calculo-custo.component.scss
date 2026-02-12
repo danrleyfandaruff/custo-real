@@ -1,514 +1,254 @@
-/* calculo-custo.component.scss */
-
-// CORREÇÃO: Remover fundo preto e forçar fundo claro
+// Paleta de Cores SaaS
 :host {
-  --ion-background-color: #f8fafc;
-  display: block;
-  height: 100%;
+  --bg-dark: #0a0f18;
+  --card-dark: #121926;
+  --accent: #38bdf8;
+  --accent-glow: rgba(56, 189, 248, 0.3);
+  --success: #22c55e;
+  --danger: #ef4444;
+  --text-primary: #f8fafc;
+  --text-secondary: #94a3b8;
 }
 
 ion-content {
-  --background: linear-gradient(145deg, #f8fafc 0%, #f1f5f9 100%);
-}
+  --background: var(--bg-dark);
+  --padding-bottom: 20px;
 
-// Sobrescrever qualquer fundo escuro do Ionic
-:host(.ion-color) .inner-scroll,
-ion-content::part(background),
-ion-content::part(scroll) {
-  background: transparent !important;
-}
-
-// Garantir que todo o conteúdo tenha fundo claro
-.content-gradient {
-  --background: transparent !important;
-  background: linear-gradient(145deg, #f8fafc 0%, #f1f5f9 100%);
-}
-
-// Background decorativo com cores claras
-.bg-pattern {
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-image:
-    radial-gradient(circle at 10% 20%, rgba(37, 99, 235, 0.03) 0%, transparent 30%),
-    radial-gradient(circle at 90% 50%, rgba(5, 150, 105, 0.03) 0%, transparent 30%),
-    radial-gradient(circle at 30% 80%, rgba(37, 99, 235, 0.02) 0%, transparent 30%);
-  pointer-events: none;
-  z-index: 0;
-}
-
-// Variáveis de cor claras
-:root {
-  --primary-gradient: linear-gradient(135deg, #2563eb, #1d4ed8);
-  --success-gradient: linear-gradient(135deg, #059669, #047857);
-  --glass-bg: rgba(255, 255, 255, 0.95);
-  --glass-border: 1px solid rgba(255, 255, 255, 0.3);
-  --shadow-sm: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-  --shadow-md: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
-  --shadow-lg: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
-  --border-radius-card: 24px;
-  --border-radius-input: 16px;
-  --bg-light: #f8fafc;
-  --bg-lighter: #ffffff;
-  --text-primary: #0f172a;
-  --text-secondary: #475569;
-  --text-muted: #64748b;
-}
-
-// Glassmorphism ajustado para fundo claro
-.glass-card {
-  background: rgba(255, 255, 255, 0.95);
-  backdrop-filter: blur(10px);
-  border: 1px solid rgba(255, 255, 255, 0.5);
-  border-radius: var(--border-radius-card);
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.04);
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-
-  &:hover {
-    box-shadow: 0 16px 48px rgba(0, 0, 0, 0.08);
+  // Força o scroll a ser mais suave e completo
+  &::part(scroll) {
+    padding-bottom: env(safe-area-inset-bottom);
   }
 }
 
-// Títulos
-.section-title {
+// Ajuste na área do resultado para garantir que ela respire
+.result-display {
+  margin-top: 40px;
+  padding-bottom: 20px;
+}
+
+.main-shell {
+  padding: 20px 16px 40px; // Reduzi o padding base
+  max-width: 800px;
+  margin: 0 auto;
+
+  // Este é o segredo: um espaçador invisível no final do fluxo de dados
+  // que garante que o último card suba o suficiente para não ficar sob o botão.
+  &::after {
+    content: '';
+    display: block;
+    height: 140px; // Espaço reservado para o botão fixo + margem de segurança
+    width: 100%;
+  }
+}
+
+.dark-gradient-bg {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: radial-gradient(circle at 50% -20%, #1e293b 0%, var(--bg-dark) 70%);
+  z-index: -1;
+}
+
+// Page Header
+.app-header {
   display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 30px;
+  h1 {
+    font-size: 1.5rem; font-weight: 800; color: white;
+    .brand-text { color: var(--accent); }
+    ion-icon { color: var(--accent); font-size: 1.2rem; }
+  }
+  p { color: var(--text-secondary); font-size: 0.9rem; margin-top: 4px; }
+}
+
+.btn-reset-top {
+  background: rgba(255,255,255,0.05);
+  color: var(--text-secondary);
+  padding: 10px;
+  border-radius: 12px;
+  font-size: 1.2rem;
+}
+
+// Neon Card Style
+.neon-card {
+  background: var(--card-dark);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 20px;
+  padding: 20px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+}
+
+.taxa-card .card-inner {
+  display: flex;
+  justify-content: space-between;
   align-items: center;
-  gap: 12px;
-  margin: 32px 0 20px;
-  padding: 0 8px;
 
-  h2 {
-    margin: 0;
-    font-size: 1.35rem;
-    font-weight: 700;
-    color: #0f172a;
-    letter-spacing: -0.5px;
-  }
-
-  .title-icon {
-    font-size: 24px;
-    color: #2563eb;
-    background: rgba(37, 99, 235, 0.1);
-    padding: 10px;
-    border-radius: 14px;
-  }
-
-  .section-badge {
-    background: #2563eb;
-    color: white;
-    padding: 6px 14px;
-    border-radius: 30px;
-    font-size: 0.85rem;
-    font-weight: 700;
-    margin-left: auto;
-    box-shadow: 0 4px 12px rgba(37, 99, 235, 0.25);
+  .info {
+    display: flex; gap: 15px; align-items: center;
+    .icon-glow {
+      background: var(--accent-glow);
+      color: var(--accent);
+      padding: 10px; border-radius: 12px;
+      font-size: 1.5rem;
+      box-shadow: 0 0 15px var(--accent-glow);
+    }
+    h3 { margin: 0; font-size: 1rem; color: white; }
+    p { margin: 0; font-size: 0.75rem; color: var(--text-secondary); }
   }
 }
 
-// Card de taxa
-.taxa-container {
-  display: flex;
-  gap: 20px;
-  margin-bottom: 24px;
-  padding: 8px;
-  background: transparent;
+.input-glow-group {
+  background: #000;
+  border: 1px solid var(--accent);
+  border-radius: 12px;
+  padding: 8px 12px;
+  display: flex; align-items: center;
+  box-shadow: 0 0 10px rgba(56, 189, 248, 0.1);
 
-  .taxa-icon {
-    background: linear-gradient(145deg, #2563eb, #1d4ed8);
-    width: 60px;
-    height: 60px;
-    border-radius: 20px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    box-shadow: 0 8px 16px rgba(37, 99, 235, 0.25);
-
-    ion-icon {
-      font-size: 30px;
-      color: white;
-    }
+  input {
+    background: transparent; border: none; color: white;
+    width: 50px; text-align: right; font-weight: 700; outline: none;
   }
-
-  .taxa-content {
-    flex: 1;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-
-    .taxa-label {
-      display: flex;
-      flex-direction: column;
-
-      .label-main {
-        font-size: 1.2rem;
-        font-weight: 700;
-        color: #0f172a;
-        margin-bottom: 4px;
-      }
-
-      .label-sub {
-        font-size: 0.85rem;
-        color: #64748b;
-        display: flex;
-        align-items: center;
-        gap: 4px;
-      }
-    }
-
-    .taxa-input-wrapper {
-      display: flex;
-      align-items: center;
-      background: white;
-      border-radius: 18px;
-      padding: 4px 4px 4px 20px;
-      border: 2px solid #e2e8f0;
-      transition: all 0.2s;
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.02);
-
-      &:focus-within {
-        border-color: #2563eb;
-        box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.1);
-      }
-
-      .taxa-input {
-        --padding-start: 0;
-        --padding-end: 8px;
-        --padding-top: 14px;
-        --padding-bottom: 14px;
-        width: 110px;
-        font-weight: 700;
-        font-size: 1.2rem;
-        color: #0f172a;
-      }
-
-      .taxa-suffix {
-        background: #f1f5f9;
-        padding: 10px 18px;
-        border-radius: 16px;
-        font-weight: 600;
-        color: #2563eb;
-        font-size: 0.95rem;
-      }
-    }
-  }
+  .unit { color: var(--accent); font-size: 0.8rem; margin-left: 5px; font-weight: 600; }
 }
 
-// Cards de fornecedor com fundo branco sólido
-.fornecedor-card {
-  background: white;
-  border-radius: 24px;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.04);
-  margin-bottom: 0;
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  transition: all 0.25s ease;
-  border: 1px solid rgba(226, 232, 240, 0.6);
+// Vendors Grid
+.vendors-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 16px; margin-top: 15px;
+}
 
-  &:hover {
-    box-shadow: 0 20px 32px rgba(0, 0, 0, 0.08);
-    transform: translateY(-4px);
-    border-color: #2563eb;
-  }
+.vendor-card-premium {
+  background: var(--card-dark);
+  border-radius: 20px;
+  border: 1px solid rgba(255,255,255,0.05);
+  padding: 16px;
+  transition: 0.3s;
+
+  &:hover { border-color: var(--accent); transform: translateY(-3px); }
 
   .card-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 20px 20px 12px 20px;
-    border-bottom: 1px solid #f1f5f9;
-
-    .card-header-content {
-      display: flex;
-      align-items: center;
-      gap: 14px;
-    }
-
-    .company-icon {
-      font-size: 32px;
-      color: #2563eb;
-      background: rgba(37, 99, 235, 0.08);
-      padding: 10px;
-      border-radius: 16px;
-    }
-
-    .card-title-group {
-      display: flex;
-      flex-direction: column;
-
-      .nome-input {
-        --padding-start: 0;
-        --padding-top: 2px;
-        --padding-bottom: 2px;
-        font-size: 1.2rem;
-        font-weight: 700;
-        color: #0f172a;
-        max-width: 200px;
-
-        input {
-          &::placeholder {
-            color: #94a3b8;
-            font-weight: 500;
-          }
-        }
-      }
-
-      .card-subtitle {
-        font-size: 0.75rem;
-        color: #64748b;
-        font-weight: 500;
-        margin-top: 2px;
-      }
-    }
-
-    .card-actions {
-      display: flex;
-      gap: 4px;
-
-      .btn-action {
-        --padding-start: 8px;
-        --padding-end: 8px;
-        --padding-top: 8px;
-        --padding-bottom: 8px;
-        margin: 0;
-
-        ion-icon {
-          font-size: 20px;
-        }
-      }
-    }
+    display: flex; align-items: center; gap: 10px; margin-bottom: 15px;
+    .index { color: var(--accent); font-weight: 800; font-size: 0.8rem; }
+    .name-edit { background: transparent; border: none; color: white; font-weight: 700; flex: 1; outline: none; }
+    .actions { display: flex; gap: 5px; }
+    button { background: rgba(255,255,255,0.05); color: var(--text-secondary); padding: 5px; border-radius: 8px; }
   }
 }
 
-// Inputs com fundo claro
-.input-group {
-  display: flex;
-  align-items: center;
-  background: #f8fafc;
-  border-radius: 16px;
-  border: 1.5px solid #e2e8f0;
-  transition: all 0.2s;
-
-  &:focus-within {
-    border-color: #2563eb;
-    background: white;
-    box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.08);
+.modern-input {
+  margin-bottom: 12px;
+  label { font-size: 0.7rem; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.5px; }
+  .field {
+    background: rgba(0,0,0,0.2);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 10px;
+    padding: 10px;
+    display: flex; align-items: center;
+    margin-top: 4px;
+    input { background: transparent; border: none; color: white; width: 100%; outline: none; font-weight: 600; }
+    .symbol { font-size: 0.7rem; color: var(--text-secondary); }
   }
+}
 
-  .input-prefix {
-    padding-left: 16px;
-    font-weight: 600;
-    color: #64748b;
-    font-size: 0.9rem;
-  }
-
-  .input-modern {
-    --padding-start: 8px;
-    --padding-end: 8px;
-    --padding-top: 12px;
-    --padding-bottom: 12px;
-    flex: 1;
-
+.mini-stats-grid {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 10px;
+  .mini-input {
+    label { font-size: 0.65rem; color: var(--text-secondary); }
     input {
-      font-weight: 600;
-      color: #0f172a;
-
-      &::placeholder {
-        color: #94a3b8;
-        font-weight: 400;
-      }
-    }
-  }
-
-  .input-suffix {
-    padding-right: 16px;
-    font-weight: 600;
-    color: #64748b;
-    font-size: 0.9rem;
-    background: transparent;
-  }
-}
-
-// Card de adicionar com fundo claro
-.add-card {
-  background: white;
-  border-radius: 24px;
-  height: 100%;
-  min-height: 280px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border: 2px dashed #2563eb;
-  background: linear-gradient(145deg, rgba(37, 99, 235, 0.02), rgba(37, 99, 235, 0.04));
-  transition: all 0.3s;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.02);
-
-  &:hover {
-    background: linear-gradient(145deg, rgba(37, 99, 235, 0.04), rgba(37, 99, 235, 0.06));
-    border-color: #1d4ed8;
-    transform: translateY(-4px);
-    box-shadow: 0 20px 32px rgba(37, 99, 235, 0.12);
-  }
-
-  .add-content {
-    .add-icon-container {
-      background: white;
-      width: 90px;
-      height: 90px;
-      border-radius: 45px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      margin: 0 auto 24px;
-      box-shadow: 0 12px 24px rgba(37, 99, 235, 0.12);
-
-      .add-icon {
-        font-size: 48px;
-        color: #2563eb;
-      }
-    }
-
-    h3 {
-      font-size: 1.3rem;
-      font-weight: 800;
-      color: #0f172a;
-      margin-bottom: 8px;
-    }
-
-    p {
-      color: #64748b;
-      margin: 0;
-      font-size: 0.95rem;
+      background: rgba(255,255,255,0.05); border: none; border-radius: 8px;
+      padding: 8px; color: white; width: 100%; margin-top: 4px; font-size: 0.8rem;
     }
   }
 }
 
-// Card do vencedor com gradiente claro
-.premium-card {
-  background: linear-gradient(145deg, #0f172a, #1e293b);
-  border-radius: 28px;
-  padding: 36px;
+.add-card-dashed {
+  background: transparent;
+  border: 2px dashed rgba(255,255,255,0.1);
+  border-radius: 20px;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  color: var(--text-secondary); min-height: 200px;
+  &:hover { border-color: var(--accent); color: white; background: rgba(255,255,255,0.02); }
+  .circle-icon { font-size: 2rem; margin-bottom: 10px; }
+}
+
+// Winner Card - O Coração do Layout
+.winner-glow-card {
+  margin-top: 40px;
+  background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+  border-radius: 30px;
+  padding: 30px;
   position: relative;
   overflow: hidden;
-  box-shadow: 0 25px 40px -12px rgba(0, 0, 0, 0.25);
+  border: 1px solid var(--accent);
+  box-shadow: 0 20px 50px rgba(0,0,0,0.4), 0 0 20px var(--accent-glow);
+  animation: slideUp 0.6s ease;
 
-  &::before {
-    content: '';
-    position: absolute;
-    top: -50%;
-    left: -20%;
-    right: -20%;
-    bottom: -50%;
-    background: radial-gradient(circle at 30% 50%, rgba(37, 99, 235, 0.2), transparent 70%);
-    animation: rotate 20s linear infinite;
+  .winner-badge {
+    background: var(--accent);
+    color: var(--bg-dark);
+    display: inline-flex; align-items: center; gap: 5px;
+    padding: 6px 15px; border-radius: 100px;
+    font-size: 0.75rem; font-weight: 800; text-transform: uppercase;
   }
 
-  .vencedor-content {
-    .vencedor-info {
-      .vencedor-nome {
-        color: white;
-        text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-      }
-    }
+  .winner-info {
+    text-align: center; margin: 25px 0;
+    .winner-name { font-size: 1rem; font-weight: 800; color: white; margin: 0; }
+    .main-price { font-size: 3rem; font-weight: 900; color: var(--success); letter-spacing: -1px; margin-top: 5px; }
+    .price-label { color: var(--text-secondary); font-size: 0.9rem; }
   }
 }
 
-// Ranking com fundo branco
-.ranking-card {
-  background: white;
-  border-radius: 28px;
-  padding: 28px;
-  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.04);
+.economy-strip {
+  background: rgba(34, 197, 94, 0.1);
+  border: 1px solid rgba(34, 197, 94, 0.2);
+  border-radius: 15px;
+  padding: 12px 20px;
+  display: flex; justify-content: space-between; align-items: center;
+  color: var(--success);
+  margin-bottom: 25px;
+  .strip-content { display: flex; align-items: center; gap: 8px; font-size: 0.95rem; }
+  .pct-badge { background: var(--success); color: white; padding: 2px 8px; border-radius: 6px; font-weight: 800; font-size: 0.8rem; }
+}
 
-  .ranking-header {
-    .ranking-title {
-      h3 {
-        color: #0f172a;
-        font-weight: 700;
-      }
-    }
+.stats-table {
+  display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px;
+  padding-top: 20px; border-top: 1px solid rgba(255,255,255,0.05);
+  .stat-col {
+    display: flex; flex-direction: column;
+    span { font-size: 0.7rem; color: var(--text-secondary); text-transform: uppercase; }
+    strong { color: white; font-size: 1rem; margin-top: 4px; }
+    .minus { color: var(--danger); }
   }
 }
 
-// Footer note com fundo claro
-.footer-note {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 10px;
-  margin: 40px 0 20px;
-  padding: 18px 24px;
-  background: white;
-  border-radius: 40px;
-  color: #2563eb;
-  font-size: 0.95rem;
-  font-weight: 600;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.02);
-  border: 1px solid #e2e8f0;
-
-  ion-icon {
-    font-size: 22px;
-  }
+.btn-export {
+  width: 100%; margin-top: 25px; background: rgba(255,255,255,0.05);
+  color: white; padding: 12px; border-radius: 12px; font-weight: 600;
+  display: flex; align-items: center; justify-content: center; gap: 8px;
 }
 
-// Empty state com fundo claro
-.empty-state {
-  text-align: center;
-  padding: 70px 20px;
-  background: white;
-  border-radius: 32px;
-  margin: 40px 0;
-  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.02);
-
-  .empty-icon-container {
-    background: linear-gradient(145deg, rgba(37, 99, 235, 0.08), rgba(37, 99, 235, 0.12));
-    width: 140px;
-    height: 140px;
-    border-radius: 70px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin: 0 auto 28px;
-
-    .empty-icon {
-      font-size: 70px;
-      color: #2563eb;
-    }
-  }
-
-  h3 {
-    font-size: 1.8rem;
-    font-weight: 800;
-    color: #0f172a;
-    margin-bottom: 16px;
-  }
-
-  p {
-    color: #64748b;
-    font-size: 1.1rem;
-    margin-bottom: 32px;
-  }
+// Footer Fixed Action
+.footer-action {
+  position: fixed; bottom: 20px; left: 0; right: 0;
+  padding: 0 20px; z-index: 1000;
 }
 
-// Animações
-@keyframes rotate {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.main-action-btn {
+  width: 100%; max-width: 500px; margin: 0 auto;
+  height: 60px; border-radius: 18px;
+  background: linear-gradient(90deg, #0284c7, #38bdf8);
+  color: white; font-weight: 800; font-size: 1rem;
+  position: relative; overflow: hidden;
+  box-shadow: 0 10px 25px rgba(56, 189, 248, 0.4);
+
+  .btn-content { display: flex; align-items: center; justify-content: center; gap: 10px; }
 }
 
-// Garantir fundo branco em todos os cards
-ion-card {
-  --background: white;
-  background: white;
-}
-
-ion-card-content,
-ion-card-header {
-  background: transparent;
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(30px); }
+  to { opacity: 1; transform: translateY(0); }
 }
